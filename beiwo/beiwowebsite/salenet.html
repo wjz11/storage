@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>营销网络 - 倍沃医学</title><meta name="description" content=""><meta name="keywords" content=""><link href="https://cdn.bootcss.com/animate.css/3.7.0/animate.min.css" rel="stylesheet"><link href="https://cdn.bootcss.com/Swiper/4.4.2/css/swiper.min.css" rel="stylesheet"><link rel="stylesheet" href="./static/plugin/simplePagination/simplePagination.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1108764_8phcv8eiaxr.css"><link href="./static/css/main-326c5875d6.css" rel="stylesheet"><link rel="shortcut icon" href="./static/image/favicon.png" type="image/x-icon"><!--[if lt IE 9]>
+<script src="./static/plugin/html5shiv.min.js" charset="utf-8"></script>
+<script src="./static/plugin/respond.min.js" charset="utf-8"></script>
+<![endif]--><link href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.0/css/swiper.min.css" rel="stylesheet"><link rel="stylesheet" href="./static/css/home-3774e260d1.css"><style>#mapbox .anchorBL{display:none}</style></head><body><header id="header"><div class="limit-widthnav clear logobox"><a href="index.html" class="fl logodiv" style="display:inline-block"><img src="./static/image/logo.png" alt=""></a><div class="fl hottel"><div class="firsttel">全国服务热线<span>400-115-2855</span></div><div class="enginfo">The Inventor of EZgene<sup>TM</sup> and ViraTrap<sup>TM</sup> Systems</div></div><a href="javascript:;" class="rightsearch fr"><i class="iconfont iconsousuo search-i" style="opacity:0"></i> <input type="text" class="rightsearchinput"> <i class="iconfont iconsousuo serch-serach"></i></a><div class="midmenu clear"><div class="fl menuitem"><a href="index.html" class="rightitem">首页</a></div><div class="fl menuitem productcenter"><a href="prolist.html" class="rightitem">产品中心</a></div><div class="fl menuitem"><a href="news.html" class="rightitem">新闻动态</a></div><div class="fl menuitem"><a href="javascript:;" class="rightitem downheader">资料下载</a><div class="secondmenu"><a href="contract.html?type=1" class="seconditem"><span class="itemfont">说明书</span> </a><a href="contract.html?type=2" class="seconditem"><span class="itemfont">宣传资料</span> </a><a href="contract.html?type=3" class="seconditem"><span class="itemfont">其他</span></a></div></div><div class="fl menuitem"><a href="salenet.html" class="rightitem selected">营销网络</a></div><div class="fl menuitem"><a href="javascript:;" class="rightitem">关于我们</a><div class="secondmenu"><a href="aboutus.html" class="seconditem"><span class="itemfont">关于倍沃</span> </a><a href="team.html" class="seconditem"><span class="itemfont">倍沃团队</span> </a><a href="course.html" class="seconditem"><span class="itemfont">倍沃历程</span></a></div></div></div></div><div class="productbox"><div class="productbox-content"><div class="productbox-left"><div class="productbox-left-title">产品分类</div><div class="productbox-left-info"><ul class="productlist"></ul></div></div><div class="productbox-right"><div class="productbox-right-title newtitlefirst">新品推荐</div><div class="productbox-right-info newproductfirst"></div></div><div class="productbox-right"><div class="productbox-right-title newtitle">新品推荐</div><div class="productbox-right-info newproductsecond"></div></div></div></div></header><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script><script type="text/html" id="inputTempl"><div class="fl searchbox">
+		<i class='icons sprite-search'></i>
+		<input type="text" placeholder="请输入产品名称或编号">
+		<i class="iconfont sprite-search close"></i>
+	</div></script><script type="text/html" id="productListTempl">{{each list v}}
+		<li data-id='{{v.cId}}'>
+			<span>{{v.cName}}</span>
+			<span class="productnum">{{v.count}}</span>
+		</li>
+	{{/each}}</script><script type="text/html" id="newTempl"><div class="productbox-right-box series" data-id="{{cId}}">
+		<div class="productbox-right-img">
+			<img src="{{cImage}}" alt="">
+		</div>
+		<div class="productbox-right-name">
+			{{cName}}
+		</div>
+		<div class="productbox-right-cname">
+			{{cNameE}}
+		</div>
+	</div></script><script type="text/html" id="newTemp2"><div class="productbox-right-box box-good" data-id="{{good_id}}">
+		<div class="productbox-right-img">
+			<img src="{{good_image}}" alt="">
+		</div>
+		<div class="productbox-right-name">
+			{{good_name}}
+		</div>
+		<div class="productbox-right-cname">
+			{{category_name}}
+		</div>
+	</div></script><script type="text/html" id="secondTempl"><ul>
+		{{each list v}}
+		<li data-id="{{v.xId}}"> {{v.xName}}</li>
+		{{/each}}
+	</ul></script><script>$(function(){
+		var namelist = []
+		var width = $(window).width()/(1920/1320)
+		var height = $(window).width()/(1920/802)
+		$(".productbox").css({
+			"width": width + "px",
+		});
+		$.ajax({
+			url: API.url() + "product/cList2/all",
+			type: "GET",
+			dataType: "json"
+		}).done(function (cb) {
+			if(API.checkCallback(cb)){
+				$(".productlist").html(template("productListTempl",cb.data))
+				$(".productlist li").mouseenter(function(){
+					getProSecond(cb.data.list,$(this).data("id"))
+				}).on("click",function(){
+					var id = $(this).data("id")
+					window.location.href = "promore.html?cid=" + id
+				})
+				getNewList(cb.data.list)
+			}
+		})
+		function getProSecond(arr,id){
+			$.each(arr,function(index,item){
+				if(item.cId == id){
+					$(".newtitlefirst").text("")
+					var obj = {}
+					obj.list = item.list
+					$(".newproductfirst").html(template("secondTempl",obj))
+					$(".newproductfirst ul li").on("click",function(){
+						var id = $(this).data("id")
+						window.location.href = "proxq.html?xid=" + id + "&cid="+ item.cId
+					})
+				}
+			})
+		}
+		function getNewList(arr){
+			$.ajax({
+					url: API.url() + 'product/list/recommended',
+					type: 'GET',
+				}).done(function (cb) {
+					if (API.checkCallback(cb)) {
+                        if (cb.data.clist.length == 0) {
+                            $(".newproductfirst").html(template("newTemp2",cb.data.glist[0]))
+						    $(".newproductsecond").html(template("newTemp2",cb.data.glist[1]))
+                        } else {
+                            $(".newproductfirst").html(template("newTempl", cb.data.clist[0]))
+                            $(".newproductsecond").html(template("newTemp2", cb.data.glist[0]))
+                        }
+                        $(".series").on("click", function () {
+                            var id = $(this).data("id")
+                            window.location.href = "promore.html?cid=" + id
+                        });
+                        $(".box-good").on("click", function () {
+                            var id = $(this).data("id")
+                            window.location.href = "proxq.html?xid=" + id
+                        });
+					}
+				})
+		}
+		$(".downheader").on("click",function(){
+			window.location.href ="contract.html?type=1"
+		});
+		$(".rightsearch input").on("focus",function(){
+			$(".rightsearch").css({
+				"animation":"mymove 0.8s 1",
+				"width":"708px"
+			});
+			$(".midmenu").css({
+				"animation":"opacitymove 0.6s 1",
+			})
+			setTimeout(function(){
+				$(".search-i").css({
+					'opacity':"1"
+				})
+				$(".serch-serach")
+				.addClass("iconguanbi")
+				.removeClass("iconsousuo")
+				$(".rightsearch input").attr("placeholder","请输入搜索的内容").css({
+					"bottom": '2px'
+				})
+			},200)
+			$(this).css({
+				'width':"90%"
+			})
+			$(".serch-serach").on("click",function(){
+				$(".rightsearch").css({
+					"animation":"backmove 0.8s 1",
+					"width":"80px"
+				});
+				$(".midmenu").css({
+					"animation":"backopacitymove 0.6s 1",
+				})
+				setTimeout(function(){
+					$(".search-i").css({
+						'opacity':"0"
+					})
+					$(".serch-serach")
+					.addClass("iconsousuo")
+					.removeClass("iconguanbi")
+				},100)
+				$(".rightsearch input").removeAttr('placeholder').css({
+					"bottom": '15px',
+					"padding-left":"5px"
+				})
+				$(this).css({
+					"right":"5px"
+				})
+			})
+			$(".rightsearch input").on("keyup",function(e){
+				if(e.keyCode == 13){
+					if($(".rightsearch input").val() == ''){
+						swal({
+							icon: 'error',
+							title: '请输入搜索内容',
+							timer: 2000,
+							button: false
+						});
+					}else {
+						window.location.href = "search.html?keyword=" + $(this).val()
+					}
+					setTimeout(() => {
+						$(".rightsearch input").val("")
+					}, 200);
+				}
+				if(e.keyCode == 27){
+					$(".rightsearch").css({
+						"animation":"backmove 0.8s 1",
+						"width":"80px"
+					});
+					$(".midmenu").css({
+						"animation":"backopacitymove 0.6s 1",
+					})
+					setTimeout(function(){
+						$(".search-i").css({
+							'opacity':"0"
+						})
+						$(".serch-serach")
+						.addClass("iconsousuo")
+						.removeClass("iconguanbi")
+					},100)
+					$(".rightsearch input").removeAttr('placeholder').css({
+						"bottom": '15px',
+						"padding-left":"5px"
+					})
+					$(this).css({
+						"right":"5px"
+					})
+				}
+			})
+		})
+		$(".productcenter").mouseenter(function(){
+			$(".productbox").css("display","block")
+		})
+		$(".productbox").mouseleave(function(){
+			$(".productbox").css("display","none")
+		})
+	})</script><div id="salenet"><div class="bannerbox"><div class="banner"></div><script type="text/html" id="bannerTemp"><a href="javascript:;">
+                            <img src="{{list[0].xImage}}" alt="" />
+                            <div class="banner-info">
+                                <div class="banner-box">
+                                    <div class="banner-title">
+                                        <span>营销网络</span><span class="gt">&gt;</span>
+                                        <select id="select">
+                                            <option value="0">中国区网络</option>
+                                            <option value="1">全球网络</option>
+                                        </select>
+                                    </div>
+                                    <div class="info-title">中国区网络</div>
+                                    <div class="info">根据客户的需求为客户提供满足客户需求的产品，我们服务于全球的生物制药、农业生产产业、学术研究等机构,</div>
+                                    <div class="info-bottom">致力于为客户提供最优质的产品和技术服务</div>
+                                </div>
+                            </div>
+                        </a></script></div><div class="limit-width news_main clear"><div class="studybox clear fl"><div class="newsinlist clear"><div class="mapbox" id="mapbox"></div></div></div><script type="text/html" id="listTemp">{{if arr_info.length==0}}
+                <p class="realnodata">暂无相关内容</p>
+                {{else}}
+                {{if status==1}}
+                <div class="mapbox">
+                    <img src="./static/image/globalmap.png" alt="">
+                </div>
+                {{else}}
+                <div class="mapbox">
+                    <img src="./static/image/cnmap.png" alt="">
+                </div>
+                {{/if}}
+                <div id="masonry">
+                    {{each arr_info val}}
+                    <div class="news_item clear">
+                        <h2 class="provin" title="{{val.xProvince}}">{{val.xProvince}}</h2>
+                        <div class="companname" title="{{val.xName}}">{{val.xName}}</div>
+                        {{if val.xAddr}}<div class="address" title="{{val.xAddr}}">地址：{{val.xAddr}}</div>{{/if}}
+                        {{if val.xTel}}<div class="tel" title="{{val.xTel}}">电话：{{val.xTel}}</div>{{/if}}
+                        {{if val.xTelA}}<div class="hottel" title="{{val.xTelA}}">总机：{{val.xTelA}}</div>{{/if}}
+                        {{if val.xFax}}<div class="phone" title="{{val.xFax}}">传真：{{val.xFax}}</div>{{/if}}
+                        {{if val.xEma}}<div class="website" title="{{val.xEma}}">Email：{{val.xEma}}</div>{{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+
+                {{/if}}</script></div></div><footer class="footer-box" id="footer-box"><div class="box"><div class="footer-box-left"><img src="./static/image/botlogo.png" alt=""></div><div class="footer-box-right"></div></div></footer><script type="text/html" id="addressTempl">{{each list v}}
+        <div class="right-box">
+            {{if v.name !== ""}}
+            <h3 >{{v.name}}</h3>
+            {{/if}}
+            {{if v.address !== ""}}
+            <div>地址：{{v.address}}</div>
+            {{/if}}
+            {{if v.switchboard !== ""}}
+            <div>总机：{{v.switchboard}}</div>
+            {{/if}}
+            {{if v.phone !== ""}}
+            <div>电话：{{v.phone}}</div>
+            {{/if}}
+            {{if v.fox !== ""}}
+            <div>传真：{{v.fox}}</div>
+            {{/if}}
+            {{if v.email !==""}}
+            <div>E-mail：{{v.email}}</div>
+            {{/if}}
+        </div>
+    {{/each}}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script><script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script><script src="./static/plugin/template-web.js" charset="utf-8"></script><script src="./static/plugin/webuploader/webuploader.min.js" charset="utf-8"></script><script src="./static/plugin/Validform_v5.3.2_min.js" charset="utf-8"></script><script src="https://cdn.bootcss.com/Swiper/4.4.2/js/swiper.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><script src="./static/plugin/simplePagination/jquery.simplePagination.js"></script><script src="./static/js/api-00dea90104.js" charset="utf-8"></script><script>navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|hpwOS|SysbianOS|Windows Phone|UCWEB|BlackBerry|Nokia|RIM|IEMobile|Mobile)/i)&&(location.href="http://beiwo.biomiga.com.cn/h5")</script><script>$(function(){if(API.init(),$.fn.extend({animateCss:function(t,e){return this.addClass("animated "+t).one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",function(){$(this).removeClass("animated "+t),e&&e()}),this}}),$.ajax({url:API.url()+"indexhtml/index/bottom_address",dataType:"json",data:{offset:0,limit:3,connect_us_category:1}}).done(function(t){API.checkCallback(t)&&$(".footer-box-right").html(template("addressTempl",t.data))}),$(".sidebar").on("click",".gotop",function(){return $("html").scrollTop()?$("html").animate({scrollTop:0},500):$("body").animate({scrollTop:0},500),!1}),$(".mask").click(function(t){if(t.target==this||t.target==$(this).find(".close").get(0)){t.preventDefault();var e=$(this);e.find(".ctt").animateCss("zoomOut",function(){e.hide()})}}),$(".left-nav").on("click",".first-click-item",function(){$(this).closest(".item-container").siblings().find(".first-click-item").removeClass("active"),$(this).toggleClass("active"),$(this).hasClass("selected")||$(this).siblings(".second-list").slideToggle(300)}),$("#historybox").on("click",".historyitem",function(){$("#searchcontent").val($(this).text()),$(this).parent().hide()}),JSON.parse(sessionStorage.getItem("searchhistory")))var e=JSON.parse(sessionStorage.getItem("searchhistory"));else e=[];$("#searchbtn").click(function(){$("#searchcontent").val()&&e.push($("#searchcontent").val()),e.length&&sessionStorage.setItem("searchhistory",JSON.stringify(e));var t=$("#searchcontent").val();window.location.href="search.html?search="+t}),$("#searchcontent").focus(function(){if(JSON.parse(sessionStorage.getItem("searchhistory"))){var t=function(t){var e=new Array;for(var i in t)-1==e.indexOf(t[i])&&e.push(t[i]);return e}(e).reverse().slice(0,5);$("#historybox").html(template("historyTemp",t)),$("#historybox").show()}else $("#historybox").hide()}),$("#searchcontent").blur(function(){setTimeout(function(){$("#historybox").hide()},100)})})</script><script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.0/js/swiper.min.js"></script><script src="http://api.map.baidu.com/api?v=2.0&ak=UiWMepccBQL1n8aRKsjT3TxNfO7b6E7O"></script><script src="http://api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js"></script><script>$(function(){$.ajax({url:API.url()+"banner/xList",type:"GET",data:{cId:5}}).done(function(e){API.checkCallback(e)&&($(".banner").html(template("bannerTemp",e.data)),$("#select").on("change",function(){$(".info-title").text($(this).find("option:checked").text()),1==$(this).find("option:checked").val()?t(1,1):t(4,7)}))});function t(e,s){$.ajax({url:API.url()+"aboutUs/content_us_agent_directory",type:"GET",dataType:"json",data:{category_id:e}}).done(function(e){if(API.checkCallback(e)){var t=e.data.arr_info,a=t[0].xAddr;a=a.substr(0,2);var o=new BMap.Map("mapbox");o.centerAndZoom(a,s),o.enableScrollWheelZoom();var n="",i=[];$.each(t,function(e,t){var a=[];n="<p>地址："+t.xAddr+"</p>",""!==t.xTel&&(n+='<p style="margin-top:5px;">电话：'+t.xTel+"</p>"),""!==t.xTelA&&(n+='<p style="margin-top:5px;">总机：'+t.xTelA+"</<p>"),""!==t.xEma&&(n+='<p style="margin-top:5px;">邮箱：'+t.xEma+"</p>"),""!==t.xFax&&(n+='<p style="margin-top:5px;">传真：'+t.xFax+"</p>"),a.push(t.xAddrLng,t.xAddrLat,n,t.xName),i.push(a)}),i=i.reverse();for(var l=0;l<i.length;l++){var c=new BMap.Marker(new BMap.Point(i[l][0],i[l][1])),r=i[l][2];c.name=i[l][3],o.addOverlay(c),d(r,c),p(r,c)}function d(t,a){a.addEventListener("click",function(e){p(t,a)})}function p(e,t){var a={width:250,height:140,title:t.name,enableMessage:!0},n=new BMap.Point(t.getPosition().lng,t.getPosition().lat),i=new BMap.InfoWindow(e,a);o.openInfoWindow(i,n)}}})}$(".newstab").click(function(e){$(this).addClass("selected").siblings("div").removeClass("selected"),1==$(this).data("cid")?$(".catetitle").html("全球网络"):$(".catetitle").html("中国区网络"),t(4,7)}),t(4,7)})</script></body></html>

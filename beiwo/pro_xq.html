@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=no"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title></title><link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet"><link href="https://cdnjs.cloudflare.com/ajax/libs/weui/1.1.2/style/weui.min.css" rel="stylesheet"><link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.2.0/css/jquery-weui.min.css" rel="stylesheet"><link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.19.3/sweetalert2.min.css" rel="stylesheet"><link href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.0/css/swiper.min.css" rel="stylesheet"><link rel="stylesheet" href="./static/plugin/mescroll/mescroll.min.css"><link href="./static/css/reset-f7f2cefa7a.css" rel="stylesheet"><link rel="stylesheet" href="./static/css/pro-4c4bd76c5b.css"></head><body><div class="xqbox"></div><script type="text/html" id="xqboxTemp"><div class="xqname">{{xName}}</div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {{each image imagelist}}
+                    <div class="swiper-slide">
+                        <img src="{{imagelist}}" alt="">
+                    </div>
+                {{/each}}
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="secondrow">
+            <div class="number">货号：<span>{{xNum}}</span></div>
+        </div>
+        <div class="size">
+            <div class="specifications">规格：
+                <div class="specifications-info">
+                    {{xSpec}}
+                </div>
+            </div>
+        </div>
+        <div class="thirdrow">
+            <div class="desc">描述：<span>{{xIntro}}</span></div>
+        </div>
+        <div class="productinfo">
+            <div class="">产品说明:</div>
+            <div class="content">{{@xDesc}}</div>
+        </div>
+        <div class="productinfo">
+            <div class="">Q&A</div>
+            <div class="content">{{@xQues}}</div>
+        </div>
+        <div class="productinfo">
+            <div class="zhuyi">注意事项</div>
+            <div class="content">{{@xAtte}}</div>
+        </div></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.2.0/js/jquery-weui.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/latest/js.cookie.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/store2/2.7.0/store2.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.2.0/js/swiper.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.0/js/swiper.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.19.3/sweetalert2.min.js"></script><script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script><script src="https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script><script src="./static/plugin/art-template/template-web.js"></script><script src="./static/plugin/mescroll/mescroll.min.js"></script><script src="./static/plugin/Validform/Validform_v5.3.2_min.js"></script><script src="./static/plugin/webuploader/webuploader.min.js"></script><script src="./static/js/api-2c4a6e812a.js"></script><script src="./static/js/wxmember-8651654110.js"></script><script>function pushHistory(){$(window).on("popstate",function(n){self.location.reload()});window.history.replaceState({title:"",url:""},"","")}API.init(),$(".return").click(function(){return window.history.go(-1),!1}),$.fn.extend({animateCss:function(n,t){return this.addClass("animated "+n).one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",function(){$(this).removeClass("animated "+n),t&&t()}),this}}),template.defaults.imports.amountConversion=function(n){return(parseFloat(n)/100).toFixed(2)},/Android/gi.test(navigator.appVersion)&&window.addEventListener("resize",function(){"INPUT"!==document.activeElement.tagName&&"TEXTAREA"!==document.activeElement.tagName||window.setTimeout(function(){document.activeElement.scrollIntoViewIfNeeded()},0)}),$("body").on("click",".noclick",function(n){n.preventDefault(),$.toast("功能开发中")}),pushHistory()</script><script>$(function () {
+            var param = API.getParameter();
+            var xId = param["xId"];
+            $.ajax({
+                    url: API.url() + 'product/xInfo',
+                    data: {
+                        xId: xId
+                    },
+                }).done(function(cb) {
+                    if (API.checkCallback(cb)) {
+                        $('.xqbox').html(template('xqboxTemp',cb.data))
+                        var mySwiper = new Swiper('.swiper-container', {
+                            autoplay: true,//可选选项，自动滑动
+                            pagination: {
+                                el: '.swiper-pagination',
+                                type: 'custom',
+                                renderCustom: function (swiper, current, total) {
+                                    var paginationHtml = "";
+                                    for(let i = 0; i < total; i++){
+                                        if(i == (current - 1)){
+                                            paginationHtml += "<span class='pagination-item active'></span>"
+                                        }else{
+                                            paginationHtml += "<span class='pagination-item'></span>"
+                                        }
+                                    }
+                                    return paginationHtml;
+                                }
+                            },
+                        })
+                    }
+                });
+            $('.xqbox').on('click','.firstshow',function(){
+                $(this).toggleClass('select').siblings().slideToggle();
+            })
+        });</script></body></html>

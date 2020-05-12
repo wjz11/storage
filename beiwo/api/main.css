@@ -1,0 +1,20 @@
+body{font:14px/1.5 Lato, 'Microsoft Yahei', sans-serif;color:#777;background:whiteSmoke;margin:0;padding:0;}
+#header,
+#main,
+#footer{width:640px;margin:auto}
+#header{width:100%;margin:20px auto 50px;text-align:center}
+#header h1{position:relative;height:64px;line-height:64px;font-size:48px;font-weight:bold;text-align:center;color:#111}
+#header .back{width:640px;display:inline-block;text-align:left;}
+#summary{margin:0 auto;width:640px;display:inline-block;font-size:24px}
+#main .card{padding:20px;margin-top:40px;background:white;border:1px solid #D1D6DB;border-radius:8px}
+#main .card::after{position:relative;z-index:-1;content:'';box-shadow:0 20px 20px rgba(2, 37, 69, .6);padding:10px;height:10px;display:block}
+#main .card h2{text-align:center;color:#000;margin-bottom:20px}
+#main .card p{text-align:center}
+#nav{position:fixed;margin:0 0 0 -270px;width:220px;max-height:70%;overflow-y:scroll; background:white;padding-left:40px;border:1px solid #D1D6DB;border-radius:8px}
+#nav li{padding:5px 0;width:100px;float:left;}
+#nav li a{text-decoration:none;color:#666}
+table{width:100%;border-spacing:0;border-top:1px solid #ddd;border-left:1px solid #ddd}
+table th,
+table td{padding:10px;border-right:1px solid #ddd;border-bottom:1px solid #ddd}
+table td.tac{text-align:center}
+#footer{margin:50px auto;text-align:center}

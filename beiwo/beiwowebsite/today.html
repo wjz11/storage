@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>今晚吃什么</title><style>.btn,.custom,.title{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}.btn{cursor:pointer;margin-top:50px;width:100px;height:40px;color:#fff;border:none;outline:0;border-radius:8px;background-color:#f33}.custom{margin-top:110px;color:#b6b6b6;text-decoration:none}</style></head><body><div class="title">今晚吃什么？</div><button class="btn">生成</button> <a href="./customMenu.html" class="custom">自定义菜单</a><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script>$(function(){
+            var list = localStorage.getItem('menu'),
+            arr = [
+                '西红柿炒鸡蛋',
+                '啤酒鸡',
+                '醉蟹',
+                '蒜香小龙虾',
+                '番茄大虾'
+            ]
+            if(list !== undefined && list !== null) {
+                arr = list.split(",")
+            }
+            $(".btn").on("click",function(){
+                var time = setInterval(() => {
+                    var num = Math.round(Math.random()* arr.length)
+                    $(".title").text(arr[num])
+                    setTimeout(() => {
+                        clearInterval(time)
+                    },1000)
+                }, 30);
+            })
+        })</script></body></html>

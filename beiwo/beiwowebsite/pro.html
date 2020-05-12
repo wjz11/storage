@@ -1,0 +1,417 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>产品中心 - 倍沃医学</title><meta name="description" content=""><meta name="keywords" content=""><link href="https://cdn.bootcss.com/animate.css/3.7.0/animate.min.css" rel="stylesheet"><link href="https://cdn.bootcss.com/Swiper/4.4.2/css/swiper.min.css" rel="stylesheet"><link rel="stylesheet" href="./static/plugin/simplePagination/simplePagination.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1108764_8phcv8eiaxr.css"><link href="./static/css/main-326c5875d6.css" rel="stylesheet"><link rel="shortcut icon" href="./static/image/favicon.png" type="image/x-icon"><!--[if lt IE 9]>
+<script src="./static/plugin/html5shiv.min.js" charset="utf-8"></script>
+<script src="./static/plugin/respond.min.js" charset="utf-8"></script>
+<![endif]--><link href="https://cdn.bootcss.com/Swiper/4.5.0/css/swiper.min.css" rel="stylesheet"><link rel="stylesheet" href="./static/css/home-3774e260d1.css"><link rel="stylesheet" href="./static/plugin/jqueryzoom/jquery.exzoom.css"></head><body><header id="header"><div class="limit-widthnav clear logobox"><a href="index.html" class="fl logodiv" style="display:inline-block"><img src="./static/image/logo.png" alt=""></a><div class="fl hottel"><div class="firsttel">全国服务热线<span>400-115-2855</span></div><div class="enginfo">The Inventor of EZgene<sup>TM</sup> and ViraTrap<sup>TM</sup> Systems</div></div><a href="javascript:;" class="rightsearch fr"><i class="iconfont iconsousuo search-i" style="opacity:0"></i> <input type="text" class="rightsearchinput"> <i class="iconfont iconsousuo serch-serach"></i></a><div class="midmenu clear"><div class="fl menuitem"><a href="index.html" class="rightitem">首页</a></div><div class="fl menuitem productcenter"><a href="prolist.html" class="rightitem selected">产品中心</a></div><div class="fl menuitem"><a href="news.html" class="rightitem">新闻动态</a></div><div class="fl menuitem"><a href="javascript:;" class="rightitem downheader">资料下载</a><div class="secondmenu"><a href="contract.html?type=1" class="seconditem"><span class="itemfont">说明书</span> </a><a href="contract.html?type=2" class="seconditem"><span class="itemfont">宣传资料</span> </a><a href="contract.html?type=3" class="seconditem"><span class="itemfont">其他</span></a></div></div><div class="fl menuitem"><a href="salenet.html" class="rightitem">营销网络</a></div><div class="fl menuitem"><a href="javascript:;" class="rightitem">关于我们</a><div class="secondmenu"><a href="aboutus.html" class="seconditem"><span class="itemfont">关于倍沃</span> </a><a href="team.html" class="seconditem"><span class="itemfont">倍沃团队</span> </a><a href="course.html" class="seconditem"><span class="itemfont">倍沃历程</span></a></div></div></div></div><div class="productbox"><div class="productbox-content"><div class="productbox-left"><div class="productbox-left-title">产品分类</div><div class="productbox-left-info"><ul class="productlist"></ul></div></div><div class="productbox-right"><div class="productbox-right-title newtitlefirst">新品推荐</div><div class="productbox-right-info newproductfirst"></div></div><div class="productbox-right"><div class="productbox-right-title newtitle">新品推荐</div><div class="productbox-right-info newproductsecond"></div></div></div></div></header><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script><script type="text/html" id="inputTempl"><div class="fl searchbox">
+		<i class='icons sprite-search'></i>
+		<input type="text" placeholder="请输入产品名称或编号">
+		<i class="iconfont sprite-search close"></i>
+	</div></script><script type="text/html" id="productListTempl">{{each list v}}
+		<li data-id='{{v.cId}}'>
+			<span>{{v.cName}}</span>
+			<span class="productnum">{{v.count}}</span>
+		</li>
+	{{/each}}</script><script type="text/html" id="newTempl"><div class="productbox-right-box series" data-id="{{cId}}">
+		<div class="productbox-right-img">
+			<img src="{{cImage}}" alt="">
+		</div>
+		<div class="productbox-right-name">
+			{{cName}}
+		</div>
+		<div class="productbox-right-cname">
+			{{cNameE}}
+		</div>
+	</div></script><script type="text/html" id="newTemp2"><div class="productbox-right-box box-good" data-id="{{good_id}}">
+		<div class="productbox-right-img">
+			<img src="{{good_image}}" alt="">
+		</div>
+		<div class="productbox-right-name">
+			{{good_name}}
+		</div>
+		<div class="productbox-right-cname">
+			{{category_name}}
+		</div>
+	</div></script><script type="text/html" id="secondTempl"><ul>
+		{{each list v}}
+		<li data-id="{{v.xId}}"> {{v.xName}}</li>
+		{{/each}}
+	</ul></script><script>$(function(){
+		var namelist = []
+		var width = $(window).width()/(1920/1320)
+		var height = $(window).width()/(1920/802)
+		$(".productbox").css({
+			"width": width + "px",
+		});
+		$.ajax({
+			url: API.url() + "product/cList2/all",
+			type: "GET",
+			dataType: "json"
+		}).done(function (cb) {
+			if(API.checkCallback(cb)){
+				$(".productlist").html(template("productListTempl",cb.data))
+				$(".productlist li").mouseenter(function(){
+					getProSecond(cb.data.list,$(this).data("id"))
+				}).on("click",function(){
+					var id = $(this).data("id")
+					window.location.href = "promore.html?cid=" + id
+				})
+				getNewList(cb.data.list)
+			}
+		})
+		function getProSecond(arr,id){
+			$.each(arr,function(index,item){
+				if(item.cId == id){
+					$(".newtitlefirst").text("")
+					var obj = {}
+					obj.list = item.list
+					$(".newproductfirst").html(template("secondTempl",obj))
+					$(".newproductfirst ul li").on("click",function(){
+						var id = $(this).data("id")
+						window.location.href = "proxq.html?xid=" + id + "&cid="+ item.cId
+					})
+				}
+			})
+		}
+		function getNewList(arr){
+			$.ajax({
+					url: API.url() + 'product/list/recommended',
+					type: 'GET',
+				}).done(function (cb) {
+					if (API.checkCallback(cb)) {
+                        if (cb.data.clist.length == 0) {
+                            $(".newproductfirst").html(template("newTemp2",cb.data.glist[0]))
+						    $(".newproductsecond").html(template("newTemp2",cb.data.glist[1]))
+                        } else {
+                            $(".newproductfirst").html(template("newTempl", cb.data.clist[0]))
+                            $(".newproductsecond").html(template("newTemp2", cb.data.glist[0]))
+                        }
+                        $(".series").on("click", function () {
+                            var id = $(this).data("id")
+                            window.location.href = "promore.html?cid=" + id
+                        });
+                        $(".box-good").on("click", function () {
+                            var id = $(this).data("id")
+                            window.location.href = "proxq.html?xid=" + id
+                        });
+					}
+				})
+		}
+		$(".downheader").on("click",function(){
+			window.location.href ="contract.html?type=1"
+		});
+		$(".rightsearch input").on("focus",function(){
+			$(".rightsearch").css({
+				"animation":"mymove 0.8s 1",
+				"width":"708px"
+			});
+			$(".midmenu").css({
+				"animation":"opacitymove 0.6s 1",
+			})
+			setTimeout(function(){
+				$(".search-i").css({
+					'opacity':"1"
+				})
+				$(".serch-serach")
+				.addClass("iconguanbi")
+				.removeClass("iconsousuo")
+				$(".rightsearch input").attr("placeholder","请输入搜索的内容").css({
+					"bottom": '2px'
+				})
+			},200)
+			$(this).css({
+				'width':"90%"
+			})
+			$(".serch-serach").on("click",function(){
+				$(".rightsearch").css({
+					"animation":"backmove 0.8s 1",
+					"width":"80px"
+				});
+				$(".midmenu").css({
+					"animation":"backopacitymove 0.6s 1",
+				})
+				setTimeout(function(){
+					$(".search-i").css({
+						'opacity':"0"
+					})
+					$(".serch-serach")
+					.addClass("iconsousuo")
+					.removeClass("iconguanbi")
+				},100)
+				$(".rightsearch input").removeAttr('placeholder').css({
+					"bottom": '15px',
+					"padding-left":"5px"
+				})
+				$(this).css({
+					"right":"5px"
+				})
+			})
+			$(".rightsearch input").on("keyup",function(e){
+				if(e.keyCode == 13){
+					if($(".rightsearch input").val() == ''){
+						swal({
+							icon: 'error',
+							title: '请输入搜索内容',
+							timer: 2000,
+							button: false
+						});
+					}else {
+						window.location.href = "search.html?keyword=" + $(this).val()
+					}
+					setTimeout(() => {
+						$(".rightsearch input").val("")
+					}, 200);
+				}
+				if(e.keyCode == 27){
+					$(".rightsearch").css({
+						"animation":"backmove 0.8s 1",
+						"width":"80px"
+					});
+					$(".midmenu").css({
+						"animation":"backopacitymove 0.6s 1",
+					})
+					setTimeout(function(){
+						$(".search-i").css({
+							'opacity':"0"
+						})
+						$(".serch-serach")
+						.addClass("iconsousuo")
+						.removeClass("iconguanbi")
+					},100)
+					$(".rightsearch input").removeAttr('placeholder').css({
+						"bottom": '15px',
+						"padding-left":"5px"
+					})
+					$(this).css({
+						"right":"5px"
+					})
+				}
+			})
+		})
+		$(".productcenter").mouseenter(function(){
+			$(".productbox").css("display","block")
+		})
+		$(".productbox").mouseleave(function(){
+			$(".productbox").css("display","none")
+		})
+	})</script><div id="pro_list"><div class="bannerbox"><div class="banner"></div><script type="text/html" id="bannerTemp"><a href="{{list[0].xUrl!==''?list[0].xUrl:'javascript:;'}}">
+                    <img src="{{list[0].xImage}}" alt="" />
+                </a></script></div><div class="limit-width news_main clear"><div class="tabbox fl"><div class="titleeng">PRODUCT</div><div class="titlecn">产品中心</div><div class="paddbox"><div class="newstab" data-cid="1">试剂</div><div class="newstab" data-cid="2">耗材</div><div class="newstab" data-cid="3">服务</div><div class="menulist"></div></div></div><div class="studybox clear fl"><div class="catetitle">试剂</div><div class="newsinlist clear"></div></div><script type="text/html" id="listTemp">{{if !count}}
+                <p class="nodata">暂无相关内容</p>
+                {{else}}
+                {{each list val index}}
+                <div href="pro_xq.html" class="news_item clear">
+                    <div class="pic">
+                        <img src="{{val.cImage}}" alt="">
+                    </div>
+                    <div class="botname">{{val.cName}}</div>
+                    <div class="guige">
+                        <div class="guigebox">
+                            <div class="guigeboxlist">
+                                {{each val.newarr[0] v}}
+                                <div class="proguige" data-id="{{v.xId}}">{{v.xName}}</div>
+                                {{/each}}
+                            </div>
+                            <div class="more" data-id="{{val.cId}}">查看更多>></div>
+                        </div>
+                        <!-- <div class="swiper-container" id="guigebox{{index}}">
+                            <div class="swiper-wrapper">
+                                {{each val.newarr v}}
+                                <div class="swiper-slide">
+                                    <div href="javascript:;" class="eachpage">
+                                        {{each v s}}
+                                        <div class="pro_guige" data-xid="{{s.xId}}">{{s.xName}}</div>
+                                        {{/each}}
+                                    </div>
+                                    <div class="more">查看更多>></div>
+                                </div>
+                                {{/each}}
+                            </div>
+                            <div class="swiper-pagination" id="bannerpagination{{index}}"></div>
+                        </div> -->
+                    </div>
+                </div>
+                {{/each}}
+                {{/if}}</script><script type="text/html" id="fuwulistTemp">{{if !count}}
+                <p class="nodata">暂无相关内容</p>
+                {{else}}
+                {{each list val index}}
+                <div href="pro_xq.html" class="news_item clear" data-id="{{val.cId}}">
+                    <div class="pic">
+                        <img src="{{val.cImage}}" alt="">
+                    </div>
+                    <div class="botname">{{val.cName}}</div>
+                </div>
+                {{/each}}
+                {{/if}}</script><script type="text/html" id="prodetailTemp"><div class="sku-box w80">
+                    <div class="sku-box-left">
+                        <div class="exzoom" id="exzoom"> 
+                            <!--大图区域-->
+                            <div class="exzoom_img_box">
+                            <ul class='exzoom_img_ul'>
+                                {{each image_sm v}}
+                                <li><img src="{{v}}"/></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <!--缩略图导航-->
+                        <div class="exzoom_nav"></div>
+                        <!--控制按钮-->
+                        <p class="exzoom_btn"> <a href="javascript:void(0);" class="exzoom_prev_btn"> &lt; </a> <a href="javascript:void(0);" class="exzoom_next_btn"> &gt; </a> </p>
+                    </div>
+                    </div>
+                    <div class="sku-box-right">
+                        <div class="right-img exzoom_img_box" id="big">
+                            <img src="" alt="">
+                        </div>
+                        <div class="box">
+                            <div class="titel">{{xNameE}}</div>
+                            <div class="title2">{{xName}}</div>
+                            <div class="table">
+                                <table cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <td class="skuname">货号</td>
+                                            <td class="skusize">规格</td>
+                                            <td class="skupirce">目录价</td>
+                                            {{if iscuxiao}}
+                                            <td class="skupircesales">促销价</td>
+                                            {{/if}}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="skutbdoy">
+                              
+                                    </tbody>
+                                </table>
+                            </div>
+                            {{if iscuxiao}}
+                            <div class="sales">促销时间：{{time_begin}} - {{time_end}}</div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="detailbot ">
+                    <div class="box w80">
+                        <div class="colorbg">
+                            <span class="ordermsg selected">产品介绍</span>
+                            <span class="prostate">资料下载</span>
+                            <span class="quality">Q&A</span>
+                            <span class="noticeissue">注意事项</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="ordermsg" class="cgbox ">
+                    <div class="xDesc w80" style="display:none;">{{#xDesc}}</div>
+                    <div class="file_name w80" style="display:none;">
+                        <a href="{{file_url}}" class="down">{{file_name}}</a>
+                        <p>{{file_size}}</p>
+                    </div>
+                    <div class="xQues w80" style="display:none;">{{#xQues}}</div>
+                    <div class="xAtte w80" style="display:none;">{{#xAtte}}</div>
+                </div>
+                <div class="product-box">
+                    <div class="product-list w80">
+                        <div class="header">相关产品</div>
+                        <ul id="productlist">
+                           
+                        </ul>
+                    </div>
+                </div></script><script type="text/html" id="fuwuTempl"><div class="fuwubox">
+                    <div class="fuwuleft">
+                        <div class="fuwutitle">{{cName}}</div>
+                        <div class="fuwuimg">
+                            <img src="{{cImage}}" alt="">
+                        </div>
+                        <div class="fuwuinfo">
+                            {{#content}}
+                        </div>
+                        <div class="fuwudown">
+                            <a href="{{file_url}}" class="down">{{file_name}}</a>
+                            <p>{{file_size}}</p>
+                        </div>
+                    </div>
+                    <div class="fuwuright">
+                        <div class="swiperbox">
+                            <div class="swiper-container fuwuswiper">
+                                <div class="swiper-wrapper">
+                                    {{each names v}}
+                                    <div class="swiper-slide" data-id="{{v.id}}">{{v.name}}</div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                </div></script><script type="text/html" id="serveTemp"><div>{{@content}}</div></script><div class="paginationbox clear paddleft"><div class="paginationcon"><div class="pagination"></div></div></div></div></div><script type="text/html" id="servelistTemp">{{each list val}}
+        <div data-cid="{{val.cId}}">{{val.cName}}</div>
+        {{/each}}</script><script type="text/html" id="skuTempl">{{each sku_info v}}
+        <tr>
+            <td class="skuname">{{v.article_number}}</td>
+            <td class="skusize">{{v.specifications}}</td>
+            <td class="skupirce">{{(v.list_price/100).toFixed(2)}}</td>
+            {{if iscuxiao}}
+            <td class="skupircesales">{{(v.promotion_price/100).toFixed(2)}}</td>
+            {{/if}}
+        </tr> 
+        {{/each}}</script><script type="text/html" id="productlistTempl">{{each list v}}
+        <li data-id="{{v.xId}}">
+            <div class="img">
+                {{each v.xImages image}}
+                <img src="{{image}}" alt="">
+                {{/each}}
+            </div>
+            <div class="info">{{v.xName}}{{v.xNum}}{{v.xSpec}}</div>
+        </li>
+        {{/each}}</script><script type="text/html" id="selectTempl">{{each nameArr v}}
+            <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}</script><script type="text/html" id="moreTempl"><div class="selectbox">
+            <select class="select">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="moreinfo">
+            <div class="moreinfo-title">{{cName}}</div>
+            <div class="moreinfo-info">
+                <span>简介：</span>
+                {{cIntro}}
+            </div>
+            <div class="moreinfolist">
+                {{each list v}}
+                    <div class="moreinfolist-box">
+                        <div class="moreinfolist-box-left">
+                            <img src="{{v.xImages[0]}}" alt="">
+                        </div>
+                        <div class="moreinfolist-box-right">
+                            <div class="moreinfolist-box-right-title">{{v.xName}}</div>
+                            <div class="moreinfolist-box-right-guige">{{v.xNum}}</div>
+                            <div class="moreinfolist-box-right-info">
+                                <div class="moreinfolist-box-right-info-box">
+                                    {{v.xIntro}}
+                                </div>
+                            </div>
+                        </div >
+                        <div class="moreinfolist-box-btn" data-id="{{v.xId}}">more</div>
+                    </div>
+                {{/each}}
+            </div>
+        </div></script><footer class="footer-box" id="footer-box"><div class="box"><div class="footer-box-left"><img src="./static/image/botlogo.png" alt=""></div><div class="footer-box-right"></div></div></footer><script type="text/html" id="addressTempl">{{each list v}}
+        <div class="right-box">
+            {{if v.name !== ""}}
+            <h3 >{{v.name}}</h3>
+            {{/if}}
+            {{if v.address !== ""}}
+            <div>地址：{{v.address}}</div>
+            {{/if}}
+            {{if v.switchboard !== ""}}
+            <div>总机：{{v.switchboard}}</div>
+            {{/if}}
+            {{if v.phone !== ""}}
+            <div>电话：{{v.phone}}</div>
+            {{/if}}
+            {{if v.fox !== ""}}
+            <div>传真：{{v.fox}}</div>
+            {{/if}}
+            {{if v.email !==""}}
+            <div>E-mail：{{v.email}}</div>
+            {{/if}}
+        </div>
+    {{/each}}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script><script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script><script src="./static/plugin/template-web.js" charset="utf-8"></script><script src="./static/plugin/webuploader/webuploader.min.js" charset="utf-8"></script><script src="./static/plugin/Validform_v5.3.2_min.js" charset="utf-8"></script><script src="https://cdn.bootcss.com/Swiper/4.4.2/js/swiper.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><script src="./static/plugin/simplePagination/jquery.simplePagination.js"></script><script src="./static/js/api-00dea90104.js" charset="utf-8"></script><script>navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|hpwOS|SysbianOS|Windows Phone|UCWEB|BlackBerry|Nokia|RIM|IEMobile|Mobile)/i)&&(location.href="http://beiwo.biomiga.com.cn/h5")</script><script>$(function(){if(API.init(),$.fn.extend({animateCss:function(t,e){return this.addClass("animated "+t).one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",function(){$(this).removeClass("animated "+t),e&&e()}),this}}),$.ajax({url:API.url()+"indexhtml/index/bottom_address",dataType:"json",data:{offset:0,limit:3,connect_us_category:1}}).done(function(t){API.checkCallback(t)&&$(".footer-box-right").html(template("addressTempl",t.data))}),$(".sidebar").on("click",".gotop",function(){return $("html").scrollTop()?$("html").animate({scrollTop:0},500):$("body").animate({scrollTop:0},500),!1}),$(".mask").click(function(t){if(t.target==this||t.target==$(this).find(".close").get(0)){t.preventDefault();var e=$(this);e.find(".ctt").animateCss("zoomOut",function(){e.hide()})}}),$(".left-nav").on("click",".first-click-item",function(){$(this).closest(".item-container").siblings().find(".first-click-item").removeClass("active"),$(this).toggleClass("active"),$(this).hasClass("selected")||$(this).siblings(".second-list").slideToggle(300)}),$("#historybox").on("click",".historyitem",function(){$("#searchcontent").val($(this).text()),$(this).parent().hide()}),JSON.parse(sessionStorage.getItem("searchhistory")))var e=JSON.parse(sessionStorage.getItem("searchhistory"));else e=[];$("#searchbtn").click(function(){$("#searchcontent").val()&&e.push($("#searchcontent").val()),e.length&&sessionStorage.setItem("searchhistory",JSON.stringify(e));var t=$("#searchcontent").val();window.location.href="search.html?search="+t}),$("#searchcontent").focus(function(){if(JSON.parse(sessionStorage.getItem("searchhistory"))){var t=function(t){var e=new Array;for(var i in t)-1==e.indexOf(t[i])&&e.push(t[i]);return e}(e).reverse().slice(0,5);$("#historybox").html(template("historyTemp",t)),$("#historybox").show()}else $("#historybox").hide()}),$("#searchcontent").blur(function(){setTimeout(function(){$("#historybox").hide()},100)})})</script><script src="https://cdn.bootcss.com/Swiper/4.5.0/js/swiper.min.js"></script><script src="./static/plugin/jqueryzoom/jquery.exzoom.js"></script><script>$(function(){var t=API.getParameter(),i=t.cid,e=t.xId,a=t.id,s=t.xqid;void 0!==a&&r(a,1),void 0!==s&&m(s);var n=1,l=0,o=9,c=!0,d=1;function r(e,i){$.ajax({url:API.url()+"product/xList",type:"GET",data:{cId:e,limit:99999,offset:0}}).done(function(t){API.checkCallback(t)&&($(".newsinlist").html(template("moreTempl",t.data)),$(".paginationbox").hide(),1==i?p(i):2==i&&p(i),$(".moreinfolist-box-btn").on("click",function(){void 0!==e&&(e=void 0),m($(this).data("id"))}))})}function p(t){$.ajax({url:API.url()+"product/cList2",type:"GET",dataType:"json",data:{cId:t,offset:0,limit:999}}).done(function(t){if(API.checkCallback(t)){var e=t.data.list,i=[];$.each(e,function(t,e){i.push({id:e.cId,name:e.cName})}),t.data.nameArr=i,$(".select").append(template("selectTempl",t.data)),$(".select").on("change",function(){r($(this).val(),d)})}})}function m(t){$(".paginationbox").hide(),$.ajax({url:API.url()+"product/xInfo",type:"GET",data:{xId:t}}).done(function(t){if(API.checkCallback(t)){$(".newsinlist").html(template("prodetailTemp",t.data)),$("#exzoom").exzoom({autoPlay:!1}),$(".skutbdoy").html(template("skuTempl",t.data)),$(".catetitle").html("<a href='index.html'>首页</a> > <a href='pro.html'>产品中心</a> > "+t.data.xcName+" > 详情"),$(".newsinlist").css({width:"80% !important",margin:"0 auto !important"}),$(".studybox").css({width:"100%",position:"relative",left:"50%",transform:"translateX(-50%)","margin-bottom":"0"}),$(".news_main").css({"padding-bottom":"0"}).removeClass("limit-width"),$(".catetitle").css({width:"80%",margin:"0 auto","border-bottom":"0","margin-bottom":"20px"}),$(".tabbox").hide(),$(".bannerbox").hide(),$("#ordermsg .xDesc").show(),$("#ordermsg a").on("click",function(){window.location.href=$(this).data("url")}),$.ajax({url:API.url()+"product/xList",type:"GET",data:{cId:i,limit:4,offset:0}}).done(function(t){API.checkCallback(t)&&($("#productlist").html(template("productlistTempl",t.data)),$("#productlist li").on("click",function(){m($(this).data("id"))}))}),$(".swiper-wrapper .swiper-slide").on("click",function(){$(this).addClass("selected").siblings().removeClass("selected"),$(".sku-box-left-image").find("img").attr("src",$(this).find("img").attr("src"))});$(".swiper-wrapper").width();var e=0;$(".sku-box-left-swiper .prc").on("click",function(){e-=50,$(".swiper-wrapper").css("transform","translateX("+e+"px)")}),$(".sku-box-left-swiper .next").on("click",function(){e+=50,$(".swiper-wrapper").css("transform","translateX("+e+"px)")}),$(".sku-box-left-image").on("mouseenter",function(){$(".sku-box-left-image .mask-box").show(),$(".right-img").show()}),$(".sku-box-left-image").on("mouseleave",function(){$(".sku-box-left-image .mask-box").hide(),$(".right-img").hide()}),$("#box img").attr("src",$("#skuswiper .swiper-slide").eq(0).find("img").attr("src")),$("#box").on("mousemove",function(t){$("#skuswiper .swiper-slide").eq(0).addClass("selected"),$("#box img").attr("src",$("#skuswiper .swiper-slide").eq(0).find("img").attr("src")),$("#big img").attr("src",$(this).find("img").attr("src"));var e=document.getElementsByClassName("sku-box")[0],i=(document.getElementById("box"),document.getElementById("mask")),a=(document.getElementById("big"),e.offsetLeft),s=e.offsetTop,n=i.offsetWidth/2,l=i.offsetHeight/2,o=t.pageX-a-n,c=t.pageY-s-l-190;t.pageX<185&&(o=0),544<t.pageX&&(o=544),t.pageY<292&&(c=0),491<t.pageY&&(c=491),$("#mask").css({left:o,top:c})})}})}function u(i,t){$.ajax({url:API.url()+"product/cList2",type:"GET",dataType:"json",data:{cId:i,offset:t,limit:o}}).done(function(t){if(API.checkCallback(t)){var e=t.data.count;data=t.data,data.list.forEach(function(e,t){$.ajax({url:API.url()+"product/xList",type:"GET",data:{cId:e.cId,offset:0,limit:999},async:!1}).done(function(t){API.checkCallback(t)&&(e.newarr=function(t,e){for(var i=[],a=0;a<Math.ceil(t.length/e);a++){var s=a*e,n=s+e;i.push(t.slice(s,n))}return i}(t.data.list,3))})}),1==i||2==i?$(".newsinlist").html(template("listTemp",data)):3==i&&($(".newsinlist").html(template("fuwulistTemp",data)),$(".news_item").on("click",function(){!function n(l){$.ajax({url:API.url()+"product/cList2/info",data:{cId:l}}).done(function(t){if(API.checkCallback(t)){var a=[],s=t.data;$.ajax({url:API.url()+"product/cList2",data:{cId:3,offset:0,limit:999}}).done(function(t){if(API.checkCallback(t)){var e=t.data.list;if($.each(e,function(t,e){a.push({id:e.cId,name:e.cName})}),s.names=a,$(".newsinlist").html(template("fuwuTempl",s)),$(".tabbox").hide(),$(".paginationcon").hide(),$(".catetitle").html("<a href='index.html'>首页</a> > <a href='pro.html'>产品中心</a>  >  <a href='pro.html'>服务</a>  > 详情"),$(".studybox").css({width:"100%",position:"relative",left:"50%",transform:"translateX(-50%)","margin-bottom":"0"}),void 0!==l||null!==l){var i=swiperlist=$(".swiper-wrapper .swiper-slide");$.each(i,function(t,e){l==$(this).data("id")&&($(this).addClass("swiper-slide-active").siblings().removeClass("swiper-slide-active"),new Swiper(".fuwuswiper",{direction:"vertical",navigation:{nextEl:".swiper-button-next",prevEl:".swiper-button-prev"},initialSlide:t}))})}$(".swiper-button-next").on("click",function(){var t=$(".swiper-wrapper .swiper-slide");$.each(t,function(t,e){$(this).hasClass("swiper-slide-active")&&n($(this).data("id"))})}),$(".swiper-button-prev").on("click",function(){var t=$(".swiper-wrapper .swiper-slide");$.each(t,function(t,e){$(this).hasClass("swiper-slide-active")&&n($(this).data("id"))})})}})}})}($(this).data("id"))})),c&&($(".pagination").pagination({items:e,itemsOnPage:o,cssStyle:"light-theme",prevText:"上一页",nextText:"下一页",edges:1,ellipsePageSet:!1,onPageClick:function(t,e){u(i,t-1)}}),$(".paginationbox .more span").text($(".pagination").pagination("getPagesCount"))),c=!1}})}void 0!==i&&(n=i),$.ajax({url:API.url()+"banner/cList",type:"GET",data:{pid:6}}).done(function(t){API.checkCallback(t)}),$.ajax({url:API.url()+"banner/xList",type:"GET",data:{cId:2}}).done(function(t){API.checkCallback(t)&&$(".banner").html(template("bannerTemp",t.data))}),$.ajax({url:API.url()+"product/cList2",type:"GET",async:!1,data:{cId:3,limit:999,offset:0}}).done(function(t){API.checkCallback(t)&&$(".menulist").html(template("servelistTemp",t.data))}),$("#pro_list").on("click",".prostate",function(){$(this).parent().css("background","url(./static/image/proxq2.png) no-repeat"),$(this).addClass("selected").siblings().removeClass("selected"),$("#prostate").show().siblings(".cgbox").hide(),$(".file_name").show().siblings().hide()}),$("#pro_list").on("click",".quality",function(){$(this).parent().css("background","url(./static/image/proxq3.png) no-repeat"),$(this).addClass("selected").siblings().removeClass("selected"),$("#quality").show().siblings(".cgbox").hide(),$(".xQues").show().siblings().hide()}),$("#pro_list").on("click",".noticeissue",function(){$(this).parent().css("background","url(./static/image/proxq4.png) no-repeat"),$(this).addClass("selected").siblings().removeClass("selected"),$("#noticeissue").show().siblings(".cgbox").hide(),$(".xAtte").show().siblings().hide()}),$("#pro_list").on("click",".ordermsg",function(){$(this).parent().css("background","url(./static/image/proxq1.png) no-repeat"),$(this).addClass("selected").siblings().removeClass("selected"),$("#ordermsg").show().siblings(".cgbox").hide(),$(".xDesc").show().siblings().hide()}),$("#pro_list").on("click",".proguige",function(){m($(this).data("id"))}),$("#pro_list").on("click",".more",function(){r($(this).data("id"),d)}),$("#pro_list").on("mouseenter",".tinyimg",function(){var t=$(".tinyimg").index(this);$(".normalimg").eq(t).addClass("showcurrent").siblings().removeClass("showcurrent")}),$("#pro_list").on("mouseleave",".tinyimg",function(){var t=$(".tinybox").find("div.current").index();$(".normalimg").eq(t).addClass("showcurrent").siblings().removeClass("showcurrent")}),$("#pro_list").on("click",".tinyimg",function(){$(this).addClass("current").siblings().removeClass("current")}),$(".paddbox").on("click",".menulist div",function(){$(this).addClass("selected").siblings().removeClass("selected");var t=$(this).data("cid");$.ajax({url:API.url()+"product/cList2/info",type:"GET",data:{cId:t}}).done(function(t){API.checkCallback(t)&&($(".newsinlist").html(template("serveTemp",t.data)),$(".paginationbox").hide(),$(".catetitle").html(t.data.cName))})}),function(){if($(".newstab").click(function(t){$(this).addClass("selected").siblings(".newstab").removeClass("selected"),$(".hasmenu").removeClass("selected"),$(".menulist").slideUp(),1==(n=$(this).data("cid"))?($(".catetitle").html("试剂"),$(".paginationbox").show(),d=1):2==n?($(".catetitle").html("耗材"),d=2):3==n&&($(".catetitle").html("服务"),d=3),c=!(l=0),u(n,l)}),e)$.ajax({url:API.url()+"product/xInfo",type:"GET",data:{xId:e}}).done(function(t){API.checkCallback(t)&&($(".newsinlist").html(template("prodetailTemp",t.data)),$(".catetitle").html(t.data.xcName))});else if(0<=$.inArray(parseInt(i),[1,2,3]))if(3!=i)u(i,l),$(".paddbox div[data-cid='"+i+"']").addClass("selected"),1==i?$(".catetitle").html("试剂"):2==i&&$(".catetitle").html("耗材");else{$(".hasmenu").addClass("selected").siblings(".newstab").removeClass("selected"),$(".menulist").slideDown(),$(".menulist div").eq(0).addClass("selected");var t=$(".menulist div").eq(0).data("cid");$.ajax({url:API.url()+"product/cList2/info",type:"GET",data:{cId:t}}).done(function(t){API.checkCallback(t)&&($(".newsinlist").html(template("serveTemp",t.data)),$(".paginationbox").hide(),$(".catetitle").html(t.data.cName))})}else null==a&&null==s&&u(1,l),$(".paddbox div[data-cid='1']").addClass("selected")}()})</script></body></html>

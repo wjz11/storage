@@ -1,0 +1,1 @@
+var MEMBER={checkLogin:function(){var o=!0;return null==Cookies.get("token")&&(o=!1),o},checkLoginAndJump:function(){if(!MEMBER.checkLogin())return location.href=location.origin+"/login.html?redirect_url="+encodeURIComponent(location.href),!1},logout:function(){Cookies.remove("token"),Cookies.remove("tokentime")}};
