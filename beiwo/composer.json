@@ -2,7 +2,7 @@
   "name" : "redisShop",
   "version" : "1.0",
   "require" : {
-    "catfan/medoo" : "v1.5.4",
+    "catfan/medoo" : "v1.7.5",
     "monolog/monolog": "1.2.*"
   },
   "autoload" : {
